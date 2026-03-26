@@ -186,24 +186,6 @@ Built with [Turborepo](https://turbo.build) and [Bun](https://bun.sh).
 
 ---
 
-## Development
-
-```sh
-git clone https://github.com/firatmio/dotignore
-cd dotignore
-bun install
-
-# Start web app
-bun dev --filter=web
-
-# Build CLI
-bun build --filter=@ftarslan/dotignore
-```
-
-Copy `.env.example` to `.env.local` and fill in the required Supabase and OpenAI keys before starting the web app.
-
----
-
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first.
