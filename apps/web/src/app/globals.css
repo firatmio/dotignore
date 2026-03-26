@@ -85,37 +85,38 @@
 }
 
 /* ─── Dark Theme ─── */
+/* Base palette: #121214, #19191a, #1a1a1e, #28282d */
 .dark {
-  --background: oklch(0.16 0.025 264);
-  --foreground: oklch(0.968 0.007 247);
-  --card: oklch(0.21 0.034 264);
-  --card-foreground: oklch(0.968 0.007 247);
-  --popover: oklch(0.21 0.034 264);
-  --popover-foreground: oklch(0.968 0.007 247);
+  --background: #121214;
+  --foreground: #e4e4e7;
+  --card: #1a1a1e;
+  --card-foreground: #e4e4e7;
+  --popover: #1a1a1e;
+  --popover-foreground: #e4e4e7;
   --primary: oklch(0.765 0.177 163);
-  --primary-foreground: oklch(0.16 0.04 163);
-  --secondary: oklch(0.26 0.036 264);
-  --secondary-foreground: oklch(0.929 0.013 255);
-  --muted: oklch(0.26 0.036 264);
-  --muted-foreground: oklch(0.704 0.04 256);
-  --accent: oklch(0.26 0.05 163);
+  --primary-foreground: #121214;
+  --secondary: #28282d;
+  --secondary-foreground: #e4e4e7;
+  --muted: #28282d;
+  --muted-foreground: #a1a1aa;
+  --accent: #28282d;
   --accent-foreground: oklch(0.765 0.177 163);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 12%);
+  --border: #28282d;
+  --input: #28282d;
   --ring: oklch(0.765 0.177 163);
   --chart-1: oklch(0.765 0.177 163);
   --chart-2: oklch(0.707 0.165 241);
   --chart-3: oklch(0.702 0.183 293);
   --chart-4: oklch(0.828 0.189 84);
   --chart-5: oklch(0.712 0.194 13);
-  --sidebar: oklch(0.19 0.03 264);
-  --sidebar-foreground: oklch(0.968 0.007 247);
+  --sidebar: #19191a;
+  --sidebar-foreground: #e4e4e7;
   --sidebar-primary: oklch(0.765 0.177 163);
-  --sidebar-primary-foreground: oklch(0.16 0.04 163);
-  --sidebar-accent: oklch(0.26 0.05 163);
-  --sidebar-accent-foreground: oklch(0.765 0.177 163);
-  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-primary-foreground: #121214;
+  --sidebar-accent: #28282d;
+  --sidebar-accent-foreground: #e4e4e7;
+  --sidebar-border: #28282d;
   --sidebar-ring: oklch(0.765 0.177 163);
 }
 
@@ -163,11 +164,11 @@ button {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: oklch(0.5 0.04 256 / 40%);
+  background: #3a3a40;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.765 0.177 163 / 50%);
+  background: #4a4a52;
 }
 
 /* Firefox */
@@ -177,5 +178,5 @@ button {
 }
 
 .dark * {
-  scrollbar-color: oklch(0.5 0.04 256 / 40%) transparent;
+  scrollbar-color: #3a3a40 transparent;
 }
