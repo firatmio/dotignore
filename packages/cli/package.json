@@ -1,0 +1,25 @@
+{
+  "name": "dotignore",
+  "version": "0.0.0",
+  "type": "module",
+  "bin": {
+    "dotignore": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@dotignore/shared": "workspace:*",
+    "@dotignore/templates": "workspace:*",
+    "commander": "^13.0.0",
+    "inquirer": "^12.0.0",
+    "chalk": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}

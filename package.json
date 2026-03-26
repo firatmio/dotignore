@@ -18,7 +18,9 @@
   },
   "packageManager": "bun@1.3.10",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/web",
+    "packages/shared",
+    "packages/templates",
+    "packages/cli"
   ]
 }
