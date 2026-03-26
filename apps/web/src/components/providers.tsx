@@ -3,6 +3,7 @@
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { I18nProvider } from "@/lib/i18n/provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -12,10 +13,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <TooltipProvider>
-        {children}
-        <Toaster richColors position="bottom-right" />
-      </TooltipProvider>
+      <I18nProvider>
+        <TooltipProvider>
+          {children}
+          <Toaster richColors position="bottom-right" />
+        </TooltipProvider>
+      </I18nProvider>
     </NextThemesProvider>
   );
 }
