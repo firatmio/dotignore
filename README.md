@@ -1,159 +1,215 @@
-# Turborepo starter
+<div align="center">
 
-This Turborepo starter is maintained by the Turborepo core team.
+# dotignore
 
-## Using this example
+<p align="center">
+  <a href="https://dotignore.vercel.app">
+    <img src="apps/web/public/logo.svg" alt="dotignore" width="64" height="64" />
+  </a>
+</p>
 
-Run the following command:
+<p align="center">
+  Smart <code>.gitignore</code> generator with AI-powered suggestions and conflict detection.
+</p>
 
-```sh
-npx create-turbo@latest
-```
+<p align="center">
+  <a href="https://www.npmjs.com/package/@ftarslan/dotignore">
+    <img src="https://img.shields.io/npm/v/%40ftarslan%2Fdotignore?style=flat-square&label=npm&color=CB3837" alt="npm version" />
+  </a>
+  <a href="https://www.npmjs.com/package/@ftarslan/dotignore">
+    <img src="https://img.shields.io/npm/dm/%40ftarslan%2Fdotignore?style=flat-square&color=CB3837" alt="npm downloads" />
+  </a>
+  <a href="https://github.com/firatmio/dotignore/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/firatmio/dotignore?style=flat-square&color=0ea5e9" alt="license" />
+  </a>
+  <a href="https://github.com/firatmio/dotignore/stargazers">
+    <img src="https://img.shields.io/github/stars/firatmio/dotignore?style=flat-square&color=f59e0b" alt="stars" />
+  </a>
+  <img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen?style=flat-square" alt="node version" />
+  <img src="https://img.shields.io/badge/built%20with-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+</p>
 
-## What's inside?
+<p align="center">
+  <a href="https://dotignore.vercel.app">Website</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://dotignore.vercel.app/dashboard">Dashboard</a>
+  &nbsp;&middot;&nbsp;
+  <a href="#cli">CLI Docs</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://dotignore.vercel.app/dashboard/docs">API Docs</a>
+</p>
 
-This Turborepo includes the following packages/apps:
+</div>
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## Overview
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+dotignore is a full-stack developer tool that generates clean, conflict-free `.gitignore` files. It ships as a web application with a dashboard and REST API, and as a standalone CLI that works offline with 17 built-in templates.
 
-### Utilities
+**Web app** — interactive generator, AI suggestions, API key management, usage analytics.
 
-This Turborepo has some additional tools already setup for you:
+**CLI** — works offline, scriptable, supports auto-detection and non-interactive modes.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
 
-### Build
+## CLI
 
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
+### Installation
 
 ```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+# Global install
+npm install -g @ftarslan/dotignore
+
+# Or run without installing
+npx @ftarslan/dotignore <command>
 ```
 
-### Develop
+### Commands
 
-To develop all apps and packages, run the following command:
+| Command | Description |
+|---------|-------------|
+| `dotignore list` | Browse all available templates |
+| `dotignore init` | Create a `.gitignore` interactively |
+| `dotignore ai` | Generate with AI-powered suggestions (API key required) |
+| `dotignore check [path]` | Analyze a `.gitignore` for conflicts and duplicate rules |
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+### `dotignore list`
 
 ```sh
-cd my-turborepo
-turbo dev
+dotignore list                        # all templates
+dotignore list --category language    # filter by category
+dotignore list --search docker        # search by name
+dotignore list --ids                  # print IDs only (pipe-friendly)
 ```
 
-Without global `turbo`, use your package manager:
+### `dotignore init`
 
 ```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+dotignore init                              # interactive
+dotignore init --templates node,nextjs,vscode
+dotignore init --detect                     # auto-detect from current directory
+dotignore init --templates node --dry-run   # preview without writing
+dotignore init --templates node --force     # skip overwrite prompt
+dotignore init --templates node --merge     # append to existing file
+dotignore init --output .config/.gitignore  # custom output path
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+**Auto-detect** scans the current directory for `package.json`, `go.mod`, `Cargo.toml`, `requirements.txt`, `next.config.*`, `.vscode/`, `.idea/` and similar files to pre-select matching templates.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+### `dotignore ai`
+
+Requires an API key from [dotignore.vercel.app/dashboard](https://dotignore.vercel.app/dashboard).
 
 ```sh
-turbo dev --filter=web
+dotignore ai --key <your-api-key>
+dotignore ai --key <key> --description "Next.js monorepo with Prisma and Docker"
+dotignore ai --key <key> --templates node,nextjs --dry-run
+
+# Or set the key as an environment variable
+export DOTIGNORE_API_KEY=<your-api-key>
+dotignore ai
 ```
 
-Without global `turbo`:
+### `dotignore check`
 
 ```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+dotignore check                          # checks .gitignore in current directory
+dotignore check path/to/.gitignore
+dotignore check --fix                    # auto-remove exact duplicate rules
 ```
 
-### Remote Caching
+Exit code `1` when errors are found — integrates cleanly with CI pipelines.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Available Templates
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+| Category | Templates |
+|----------|-----------|
+| Languages | `node` `python` `java` `go` `rust` `csharp` `swift` |
+| Frameworks | `nextjs` `django` `rails` `laravel` `flutter` |
+| IDEs | `vscode` `jetbrains` |
+| OS | `macos` `windows` `linux` |
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+---
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+## REST API
+
+The API is available at `https://dotignore.vercel.app/api`. All endpoints except `/api/templates` require a Bearer token.
+
+### `POST /api/generate`
 
 ```sh
-cd my-turborepo
-turbo login
+curl -X POST https://dotignore.vercel.app/api/generate \
+  -H "Authorization: Bearer <api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"templates": ["node", "nextjs", "vscode"]}'
 ```
 
-Without global `turbo`, use your package manager:
+### `POST /api/generate/ai`
 
 ```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+curl -X POST https://dotignore.vercel.app/api/generate/ai \
+  -H "Authorization: Bearer <api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"templates": ["node"], "projectDescription": "Next.js app with Prisma"}'
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+### `GET /api/templates`
 
 ```sh
-turbo link
+curl https://dotignore.vercel.app/api/templates
 ```
 
-Without global `turbo`:
+---
+
+## Monorepo Structure
+
+```
+dotignore/
+├── apps/
+│   └── web/                  # Next.js web application (App Router)
+├── packages/
+│   ├── cli/                  # @ftarslan/dotignore — CLI tool
+│   ├── shared/               # Shared types, schemas, conflict detector
+│   └── templates/            # .gitignore template definitions
+├── turbo.json
+└── package.json
+```
+
+Built with [Turborepo](https://turbo.build) and [Bun](https://bun.sh).
+
+### Tech Stack
+
+**Web:** Next.js 16, React 19, Tailwind CSS v4, Shadcn/ui, Supabase  
+**CLI:** Commander, Inquirer, Chalk, Ora  
+**Monorepo:** Turborepo, Bun workspaces, TypeScript
+
+---
+
+## Development
 
 ```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+git clone https://github.com/firatmio/dotignore
+cd dotignore
+bun install
+
+# Start web app
+bun dev --filter=web
+
+# Build CLI
+bun build --filter=@ftarslan/dotignore
 ```
 
-## Useful Links
+Copy `.env.example` to `.env.local` and fill in the required Supabase and OpenAI keys before starting the web app.
 
-Learn more about the power of Turborepo:
+---
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first.
+
+---
+
+## License
+
+[MIT](LICENSE) — Firat Arslan
