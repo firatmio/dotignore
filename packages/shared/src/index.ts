@@ -1,5 +1,7 @@
 // @dotignore/shared — ortak tipler, şemalar, yardımcı fonksiyonlar
 
+export { detectConflicts } from "./conflict-detector";
+
 export type TemplateSource = "github" | "custom";
 
 export type TemplateCategory = "language" | "framework" | "os" | "ide";
