@@ -1,13 +1,13 @@
 {
   "name": "dotignore",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "bin": {
     "dotignore": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "check-types": "tsc --noEmit",
     "lint": "eslint ."
   },
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "tsup": "^8.5.1",
     "typescript": "^5"
   }
 }

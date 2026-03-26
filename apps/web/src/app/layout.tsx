@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/header";
+import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "dotignore — Akıllı .gitignore Oluşturucu",
-  description: "Projeleriniz için akıllı, çakışma tespitli .gitignore dosyaları oluşturun. AI destekli öneriler ve 18+ şablon.",
+  description:
+    "Projeleriniz için akıllı, çakışma tespitli .gitignore dosyaları oluşturun. AI destekli öneriler ve 18+ şablon.",
 };
 
 export default function RootLayout({
@@ -26,11 +27,11 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
+      <body className="min-h-full">
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

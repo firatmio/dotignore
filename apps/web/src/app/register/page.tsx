@@ -4,7 +4,7 @@ import { AuthForm } from "@/components/auth-form";
 import { FileCode2 } from "lucide-react";
 import Link from "next/link";
 
-export default async function LoginPage() {
+export default async function RegisterPage() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -24,10 +24,10 @@ export default async function LoginPage() {
         </Link>
         <div className="space-y-2">
           <p className="text-muted-foreground text-lg">
-            &ldquo;Projeleriniz için akıllı .gitignore dosyaları oluşturun.&rdquo;
+            &ldquo;Profesyonel .gitignore dosyaları oluşturun.&rdquo;
           </p>
           <p className="text-muted-foreground text-sm">
-            AI önerileri, çakışma tespiti ve 18+ şablon.
+            Ücretsiz plan ile başlayın, ihtiyacınız oldukça yükseltin.
           </p>
         </div>
       </div>
@@ -43,21 +43,21 @@ export default async function LoginPage() {
               <FileCode2 className="h-5 w-5" />
               dotignore
             </Link>
-            <h1 className="text-2xl font-bold tracking-tight">Hoş geldiniz</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Hesap oluşturun</h1>
             <p className="text-muted-foreground text-sm">
-              Hesabınıza giriş yapın
+              Ücretsiz hesabınızı oluşturun ve başlayın
             </p>
           </div>
 
-          <AuthForm mode="login" />
+          <AuthForm mode="register" />
 
           <p className="text-muted-foreground text-center text-sm">
-            Hesabınız yok mu?{" "}
+            Zaten hesabınız var mı?{" "}
             <Link
-              href="/register"
+              href="/login"
               className="text-foreground underline underline-offset-4 hover:no-underline"
             >
-              Ücretsiz kayıt olun
+              Giriş yapın
             </Link>
           </p>
         </div>

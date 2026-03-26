@@ -22,13 +22,20 @@ export function OutputPanel({ content, conflicts }: OutputPanelProps) {
   }
 
   function handleDownload() {
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = ".gitignore";
-    a.click();
-    URL.revokeObjectURL(url);
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/api/download";
+    form.style.display = "none";
+
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "content";
+    input.value = content;
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
   }
 
   return (
