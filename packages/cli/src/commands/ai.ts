@@ -1,112 +1,118 @@
 import { Command } from "commander";
 import inquirer from "inquirer";
 import chalk from "chalk";
+import ora from "ora";
 import { getTemplates } from "@dotignore/templates";
 import type {
   TemplateCategory,
   GenerateAiResponse,
 } from "@dotignore/shared";
-import { writeFileSync, existsSync } from "node:fs";
+import { writeFileSync, existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const DEFAULT_API_BASE = "https://dotignore.dev";
 
 const categoryLabels: Record<TemplateCategory, string> = {
-  language: "Programlama Dilleri",
-  framework: "Framework'ler",
-  os: "İşletim Sistemleri",
-  ide: "IDE / Editörler",
+  language: "Programming Languages",
+  framework: "Frameworks & Libraries",
+  os: "Operating Systems",
+  ide: "IDEs & Editors",
 };
 
 const categories: TemplateCategory[] = ["language", "framework", "ide", "os"];
 
 export const aiCommand = new Command("ai")
-  .description("AI destekli .gitignore önerileri al")
-  .option("-k, --key <apiKey>", "API anahtarı (veya DOTIGNORE_API_KEY env)")
-  .option("-d, --description <desc>", "Proje açıklaması")
-  .option("-o, --output <path>", ".gitignore dosya yolu", ".gitignore")
+  .description("Generate a .gitignore with AI-powered suggestions")
+  .option("-k, --key <apiKey>", "API key (or set DOTIGNORE_API_KEY env var)")
+  .option("-d, --description <desc>", "Short description of your project")
+  .option("-t, --templates <ids>", "Comma-separated base template IDs")
+  .option("-o, --output <path>", ".gitignore output path", ".gitignore")
+  .option("-f, --force", "Overwrite existing file without prompting")
+  .option("--dry-run", "Preview output without writing to disk")
+  .option("-m, --merge", "Append to existing .gitignore instead of overwriting")
   .option("--api-base <url>", "API base URL", DEFAULT_API_BASE)
   .action(
     async (options: {
       key?: string;
       description?: string;
+      templates?: string;
       output: string;
+      force?: boolean;
+      dryRun?: boolean;
+      merge?: boolean;
       apiBase: string;
     }) => {
       const apiKey = options.key || process.env.DOTIGNORE_API_KEY;
       if (!apiKey) {
-        console.log(chalk.red("\n✗ API anahtarı gerekli."));
-        console.log(
-          chalk.dim(
-            "  --key ile veya DOTIGNORE_API_KEY ortam değişkeni ile belirtin."
-          )
-        );
-        console.log(
-          chalk.dim(
-            "  API anahtarı almak için: https://dotignore.dev/dashboard\n"
-          )
-        );
+        console.log(chalk.red("\n✗ API key required."));
+        console.log(chalk.dim("  Provide via --key or DOTIGNORE_API_KEY environment variable."));
+        console.log(chalk.dim("  Get a key at: https://dotignore.dev/dashboard\n"));
         process.exit(1);
       }
 
-      console.log(
-        chalk.bold.magenta("\n🤖 dotignore AI — Akıllı Öneriler\n")
-      );
+      console.log(chalk.bold.magenta("\n🤖 dotignore AI — Smart Suggestions\n"));
 
-      // Proje açıklaması
+      // ── Project description ──
       let description = options.description;
       if (!description) {
         const answer = await inquirer.prompt<{ description: string }>([
           {
             type: "input",
             name: "description",
-            message: "Projenizi kısaca tanımlayın:",
-            validate: (v: string) =>
-              v.trim().length > 0 || "Açıklama boş olamaz",
+            message: "Briefly describe your project:",
+            validate: (v: string) => v.trim().length > 0 || "Description cannot be empty",
           },
         ]);
         description = answer.description;
       }
 
-      // Temel şablon seçimi
+      // ── Base templates ──
       const allTemplates = getTemplates();
-      const selectedIds: string[] = [];
+      let selectedIds: string[] = [];
 
-      const { wantTemplates } = await inquirer.prompt<{
-        wantTemplates: boolean;
-      }>([
-        {
-          type: "confirm",
-          name: "wantTemplates",
-          message: "Temel şablonlar da seçmek ister misiniz?",
-          default: true,
-        },
-      ]);
+      if (options.templates) {
+        const ids = options.templates.split(",").map((s) => s.trim()).filter(Boolean);
+        const invalid = ids.filter((id) => !allTemplates.find((t) => t.id === id));
+        if (invalid.length > 0) {
+          console.log(chalk.red(`\n✗ Unknown template(s): ${invalid.join(", ")}`));
+          console.log(chalk.dim(`  Run ${chalk.white("dotignore list")} to see available templates.\n`));
+          process.exit(1);
+        }
+        selectedIds = ids;
+        console.log(chalk.dim(`  Using: ${ids.join(", ")}\n`));
+      } else {
+        const { wantTemplates } = await inquirer.prompt<{ wantTemplates: boolean }>([
+          {
+            type: "confirm",
+            name: "wantTemplates",
+            message: "Would you like to select base templates as well?",
+            default: true,
+          },
+        ]);
 
-      if (wantTemplates) {
-        for (const category of categories) {
-          const templates = allTemplates.filter(
-            (t) => t.category === category
-          );
-          if (templates.length === 0) continue;
+        if (wantTemplates) {
+          for (const category of categories) {
+            const templates = allTemplates.filter((t) => t.category === category);
+            if (templates.length === 0) continue;
 
-          const { selected } = await inquirer.prompt<{ selected: string[] }>([
-            {
-              type: "checkbox",
-              name: "selected",
-              message: `${categoryLabels[category]} seçin:`,
-              choices: templates.map((t) => ({
-                name: `${t.name} — ${t.description}`,
-                value: t.id,
-              })),
-            },
-          ]);
-          selectedIds.push(...selected);
+            const { selected } = await inquirer.prompt<{ selected: string[] }>([
+              {
+                type: "checkbox",
+                name: "selected",
+                message: `${categoryLabels[category]}:`,
+                choices: templates.map((t) => ({
+                  name: `${t.name} — ${t.description}`,
+                  value: t.id,
+                })),
+              },
+            ]);
+            selectedIds.push(...selected);
+          }
         }
       }
 
-      // API çağrısı
-      console.log(chalk.dim("\nAI önerileri alınıyor...\n"));
+      // ── API call with spinner ──
+      const spinner = ora("Fetching AI suggestions…").start();
 
       try {
         const res = await fetch(`${options.apiBase}/api/generate/ai`, {
@@ -122,22 +128,18 @@ export const aiCommand = new Command("ai")
         });
 
         if (!res.ok) {
-          const err = (await res
-            .json()
-            .catch(() => ({ error: res.statusText }))) as {
-            error: string;
-          };
-          console.log(
-            chalk.red(`\n✗ API hatası (${res.status}): ${err.error}\n`)
-          );
+          spinner.fail("API request failed.");
+          const err = (await res.json().catch(() => ({ error: res.statusText }))) as { error: string };
+          console.log(chalk.red(`\n✗ Error (${res.status}): ${err.error}\n`));
           process.exit(1);
         }
 
         const data = (await res.json()) as GenerateAiResponse;
+        spinner.succeed("AI suggestions ready.");
 
-        // AI önerilerini göster
+        // ── Show AI suggestions ──
         if (data.aiSuggestions.length > 0) {
-          console.log(chalk.bold("🧠 AI Önerileri:\n"));
+          console.log(chalk.bold("\n🧠 AI Suggestions:\n"));
           for (const s of data.aiSuggestions) {
             console.log(`  ${chalk.green("+")} ${chalk.bold(s.rule)}`);
             console.log(`    ${chalk.dim(s.reason)}`);
@@ -145,50 +147,58 @@ export const aiCommand = new Command("ai")
           console.log();
         }
 
-        // Çakışmaları göster
+        // ── Show conflicts ──
         if (data.conflicts.length > 0) {
-          console.log(
-            chalk.yellow(`⚠ ${data.conflicts.length} potansiyel çakışma:\n`)
-          );
+          console.log(chalk.yellow(`⚠ ${data.conflicts.length} potential conflict(s):\n`));
           for (const c of data.conflicts) {
-            const icon =
-              c.severity === "error" ? chalk.red("✗") : chalk.yellow("⚡");
+            const icon = c.severity === "error" ? chalk.red("✗") : chalk.yellow("⚡");
             console.log(`  ${icon} ${c.message}`);
           }
           console.log();
         }
 
-        // Dosyaya yaz
+        // ── Dry run ──
+        if (options.dryRun) {
+          const lines = data.content.split("\n");
+          console.log(chalk.cyan(`\n  --dry-run: no file written.`));
+          console.log(chalk.dim(`  Would write ${lines.length} lines to ${options.output}\n`));
+          return;
+        }
+
+        // ── Merge ──
         const outputPath = resolve(options.output);
-        if (existsSync(outputPath)) {
+        if (options.merge && existsSync(outputPath)) {
+          const existing = readFileSync(outputPath, "utf-8");
+          const separator = `\n\n# ─── Added by dotignore AI (${new Date().toISOString().slice(0, 10)}) ───\n`;
+          writeFileSync(outputPath, existing.trimEnd() + separator + data.content, "utf-8");
+          console.log(chalk.green(`\n✓ Merged into ${options.output}!`));
+          console.log(chalk.dim(`  ${data.aiSuggestions.length} AI suggestion(s) added\n`));
+          return;
+        }
+
+        // ── Overwrite guard ──
+        if (existsSync(outputPath) && !options.force) {
           const { overwrite } = await inquirer.prompt<{ overwrite: boolean }>([
             {
               type: "confirm",
               name: "overwrite",
-              message: `${options.output} zaten mevcut. Üzerine yazılsın mı?`,
+              message: `${options.output} already exists. Overwrite?`,
               default: false,
             },
           ]);
           if (!overwrite) {
-            console.log(chalk.yellow("\nİptal edildi.\n"));
+            console.log(chalk.yellow("\nCancelled.\n"));
             return;
           }
         }
 
         writeFileSync(outputPath, data.content, "utf-8");
-        console.log(
-          chalk.green(`\n✓ ${options.output} AI destekli olarak oluşturuldu!`)
-        );
-        console.log(
-          chalk.dim(
-            `  ${data.aiSuggestions.length} AI önerisi eklendi\n`
-          )
-        );
+        console.log(chalk.green(`\n✓ ${options.output} generated with AI!`));
+        console.log(chalk.dim(`  ${data.aiSuggestions.length} AI suggestion(s) added\n`));
       } catch (err) {
-        console.log(
-          chalk.red(`\n✗ Bağlantı hatası: ${(err as Error).message}\n`)
-        );
+        spinner.fail("Connection error.");
+        console.log(chalk.red(`\n✗ ${(err as Error).message}\n`));
         process.exit(1);
       }
     }
-  );
+  );

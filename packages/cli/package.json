@@ -1,26 +1,45 @@
 {
-  "name": "dotignore",
+  "name": "@firatmio/dotignore",
   "version": "0.1.0",
+  "description": "Smart .gitignore generator — AI-powered suggestions & conflict detection",
+  "keywords": ["gitignore", "cli", "generator", "ai", "git"],
+  "homepage": "https://dotignore.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/firatmio/dotignore"
+  },
+  "license": "MIT",
   "type": "module",
   "bin": {
     "dotignore": "./dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@dotignore/shared": "workspace:*",
-    "@dotignore/templates": "workspace:*",
+    "chalk": "^5.0.0",
     "commander": "^13.0.0",
     "inquirer": "^12.0.0",
-    "chalk": "^5.0.0"
+    "ora": "^9.3.0"
   },
   "devDependencies": {
+    "@dotignore/shared": "workspace:*",
+    "@dotignore/templates": "workspace:*",
     "@types/node": "^20",
     "tsup": "^8.5.1",
     "typescript": "^5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

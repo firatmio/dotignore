@@ -28,8 +28,8 @@ export function LandingContent({ isLoggedIn }: { isLoggedIn: boolean }) {
             <header className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur-sm">
                 <div className="container mx-auto flex h-14 items-center justify-between px-4">
                     <Link href="/" className="flex items-center gap-2 font-bold">
-                        <div className="bg-primary text-primary-foreground flex h-7 w-7 items-center justify-center rounded-lg">
-                            <FileCode2 className="h-4 w-4" />
+                        <div className="text-primary-foreground flex h-7 w-7 items-center justify-center rounded-lg">
+                            <img src="/logo.svg" alt="dotignore logo" className="h-4 w-4" />
                         </div>
                         dotignore
                     </Link>
