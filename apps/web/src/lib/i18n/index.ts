@@ -17,7 +17,7 @@ export const localeFlags: Record<Locale, string> = {
 };
 
 export function detectLocale(): Locale {
-  if (typeof window === "undefined") return "tr";
+  if (typeof window === "undefined") return "en";
 
   // 1. Check localStorage preference
   const stored = localStorage.getItem("locale");

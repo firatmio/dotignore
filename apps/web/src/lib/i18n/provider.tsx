@@ -25,13 +25,13 @@ interface I18nContextType {
 }
 
 const I18nContext = createContext<I18nContextType>({
-  locale: "tr",
-  t: tr,
+  locale: "en",
+  t: en,
   setLocale: () => {},
 });
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("tr");
+  const [locale, setLocaleState] = useState<Locale>("en");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

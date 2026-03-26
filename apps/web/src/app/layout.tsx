@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "dotignore — Akıllı .gitignore Oluşturucu",
+  title: "dotignore — Smart .gitignore Generator",
   description:
-    "Projeleriniz için akıllı, çakışma tespitli .gitignore dosyaları oluşturun. AI destekli öneriler ve 18+ şablon.",
+    "Create smart, conflict-detecting .gitignore files for your projects. AI-powered suggestions and 18+ templates.",
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="tr"
+      lang="en"
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
