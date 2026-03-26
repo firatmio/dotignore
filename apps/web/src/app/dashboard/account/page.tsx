@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { AccountForm } from "@/components/account-form";
+import { AccountContent } from "@/components/account-content";
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -19,23 +19,15 @@ export default async function AccountPage() {
   const hasPassword = providers.includes("email");
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Hesap Ayarları</h1>
-        <p className="text-muted-foreground text-sm">
-          Profilinizi ve güvenlik ayarlarınızı yönetin
-        </p>
-      </div>
-      <AccountForm
-        user={{
-          id: user!.id,
-          email: user!.email ?? "",
-          plan: profile?.plan ?? "free",
-          createdAt: user!.created_at,
-          hasPassword,
-          providers: providers as string[],
-        }}
-      />
-    </div>
+    <AccountContent
+      user={{
+        id: user!.id,
+        email: user!.email ?? "",
+        plan: profile?.plan ?? "free",
+        createdAt: user!.created_at,
+        hasPassword,
+        providers: providers as string[],
+      }}
+    />
   );
 }

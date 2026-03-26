@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { ApiKeyManager } from "@/components/api-key-manager";
+import { ApiKeysContent } from "@/components/api-keys-content";
 
 export default async function ApiKeysPage() {
   const supabase = await createClient();
@@ -12,15 +12,5 @@ export default async function ApiKeysPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">API Anahtarları</h1>
-        <p className="text-muted-foreground text-sm">
-          API erişimi için anahtarlarınızı yönetin
-        </p>
-      </div>
-      <ApiKeyManager initialKeys={apiKeys ?? []} />
-    </div>
-  );
+  return <ApiKeysContent initialKeys={apiKeys ?? []} />;
 }

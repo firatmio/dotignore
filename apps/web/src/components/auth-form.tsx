@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { Mail, Loader2 } from "lucide-react";
 import { FaGithub as Github } from "react-icons/fa";
+import { useTranslation } from "@/lib/i18n/provider";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -19,6 +20,7 @@ interface AuthFormProps {
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   async function handleOAuth(provider: "google" | "github") {
     const supabase = createClient();
@@ -29,7 +31,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       },
     });
     if (error) {
-      toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
+      toast.error(t.auth.genericError);
     }
   }
 
@@ -54,7 +56,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("Doğrulama e-postası gönderildi! Lütfen e-postanızı kontrol edin.");
+        toast.success(t.auth.verificationSent);
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({
@@ -62,7 +64,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         password,
       });
       if (error) {
-        toast.error("Geçersiz e-posta veya şifre.");
+        toast.error(t.auth.invalidCredentials);
       } else {
         router.push("/dashboard");
         router.refresh();
@@ -88,9 +90,9 @@ export function AuthForm({ mode }: AuthFormProps) {
     });
 
     if (error) {
-      toast.error("Bir hata oluştu. Lütfen tekrar deneyin.");
+      toast.error(t.auth.genericError);
     } else {
-      toast.success("Magic link gönderildi! E-postanızı kontrol edin.");
+      toast.success(t.auth.magicLinkSent);
     }
 
     setLoading(false);
@@ -141,7 +143,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background text-muted-foreground px-2">
-            veya
+            {t.common.or}
           </span>
         </div>
       </div>
@@ -149,36 +151,36 @@ export function AuthForm({ mode }: AuthFormProps) {
       {/* Email tabs */}
       <Tabs defaultValue="password" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="password">Şifre ile</TabsTrigger>
-          <TabsTrigger value="magic-link">Magic Link</TabsTrigger>
+          <TabsTrigger value="password">{t.auth.withPassword}</TabsTrigger>
+          <TabsTrigger value="magic-link">{t.auth.magicLink}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="password">
           <form onSubmit={handlePassword} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email-password">E-posta</Label>
+              <Label htmlFor="email-password">{t.auth.email}</Label>
               <Input
                 id="email-password"
                 name="email"
                 type="email"
-                placeholder="ornek@email.com"
+                placeholder={t.auth.emailPlaceholder}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Şifre</Label>
+              <Label htmlFor="password">{t.auth.password}</Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder={t.auth.passwordPlaceholder}
                 required
                 minLength={6}
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {mode === "login" ? "Giriş Yap" : "Kayıt Ol"}
+              {mode === "login" ? t.common.login : t.common.register}
             </Button>
           </form>
         </TabsContent>
@@ -186,19 +188,19 @@ export function AuthForm({ mode }: AuthFormProps) {
         <TabsContent value="magic-link">
           <form onSubmit={handleMagicLink} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email-magic">E-posta</Label>
+              <Label htmlFor="email-magic">{t.auth.email}</Label>
               <Input
                 id="email-magic"
                 name="email"
                 type="email"
-                placeholder="ornek@email.com"
+                placeholder={t.auth.emailPlaceholder}
                 required
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               <Mail className="mr-2 h-4 w-4" />
-              Magic Link Gönder
+              {t.auth.sendMagicLink}
             </Button>
           </form>
         </TabsContent>

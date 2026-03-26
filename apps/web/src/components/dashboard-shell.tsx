@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { Separator } from "@/components/ui/separator";
 import {
   FileCode2,
@@ -39,30 +40,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-
-const navMain = [
-  {
-    label: "Genel",
-    items: [
-      { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { title: "Generator", href: "/dashboard/generator", icon: FileCode2 },
-    ],
-  },
-  {
-    label: "API",
-    items: [
-      { title: "API Anahtarları", href: "/dashboard/api-keys", icon: Key },
-      { title: "Kullanım", href: "/dashboard/usage", icon: BarChart3 },
-      { title: "Dokümantasyon", href: "/dashboard/docs", icon: BookOpen },
-    ],
-  },
-  {
-    label: "Ayarlar",
-    items: [
-      { title: "Hesap", href: "/dashboard/account", icon: Settings },
-    ],
-  },
-];
+import { useTranslation } from "@/lib/i18n/provider";
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -75,6 +53,31 @@ interface DashboardShellProps {
 export function DashboardShell({ children, user }: DashboardShellProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useTranslation();
+
+  const navMain = [
+    {
+      label: t.dashboard.nav.general,
+      items: [
+        { title: t.dashboard.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
+        { title: t.dashboard.nav.generator, href: "/dashboard/generator", icon: FileCode2 },
+      ],
+    },
+    {
+      label: t.dashboard.nav.api,
+      items: [
+        { title: t.dashboard.nav.apiKeys, href: "/dashboard/api-keys", icon: Key },
+        { title: t.dashboard.nav.usage, href: "/dashboard/usage", icon: BarChart3 },
+        { title: t.dashboard.nav.docs, href: "/dashboard/docs", icon: BookOpen },
+      ],
+    },
+    {
+      label: t.dashboard.nav.settings,
+      items: [
+        { title: t.dashboard.nav.account, href: "/dashboard/account", icon: Settings },
+      ],
+    },
+  ];
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -101,7 +104,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">dotignore</span>
                     <span className="text-muted-foreground truncate text-xs">
-                      {user.plan === "pro" ? "Pro Plan" : "Free Plan"}
+                      {user.plan === "pro" ? t.dashboard.nav.proPlan : t.dashboard.nav.freePlan}
                     </span>
                   </div>
               </SidebarMenuButton>
@@ -167,12 +170,12 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
                 >
                   <DropdownMenuItem render={<Link href="/dashboard/account" />}>
                       <Settings className="mr-2 h-4 w-4" />
-                      Hesap Ayarları
+                      {t.dashboard.nav.accountSettings}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    Çıkış Yap
+                    {t.dashboard.nav.signOut}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -185,6 +188,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
         <header className="bg-background sticky top-0 z-40 flex h-14 shrink-0 items-center gap-2 border-b px-4 rounded-tl-xl rounded-tr-xl">
           <SidebarTrigger className="-ml-1" />
           <div className="flex flex-1 items-center justify-end gap-2">
+            <LanguageSwitcher />
             <ThemeToggle />
           </div>
         </header>

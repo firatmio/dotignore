@@ -199,6 +199,9 @@ const tr = {
       docs: "Dokümantasyon",
       account: "Hesap",
       accountSettings: "Hesap Ayarları",
+      signOut: "Çıkış Yap",
+      freePlan: "Ücretsiz Plan",
+      proPlan: "Pro Plan",
     },
     overview: {
       title: "Dashboard",
@@ -351,4 +354,10 @@ const tr = {
 } as const;
 
 export default tr;
-export type Translations = typeof tr;
+
+// Recursively widen literal strings to string so other locales can satisfy the shape
+type DeepStringify<T> = {
+  [K in keyof T]: T[K] extends string ? string : DeepStringify<T[K]>;
+};
+
+export type Translations = DeepStringify<typeof tr>;

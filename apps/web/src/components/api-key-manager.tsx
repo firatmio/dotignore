@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Copy, Trash2, Plus, Check, Key } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/provider";
 
 interface ApiKey {
   id: string;
@@ -25,6 +26,7 @@ export function ApiKeyManager({ initialKeys }: ApiKeyManagerProps) {
   const [creating, setCreating] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [label, setLabel] = useState("Default");
+  const { t } = useTranslation();
 
   async function handleCreate() {
     setCreating(true);
@@ -62,18 +64,18 @@ export function ApiKeyManager({ initialKeys }: ApiKeyManagerProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-lg">API Anahtarları</CardTitle>
+        <CardTitle className="text-lg">{t.components.apiKeyManager.title}</CardTitle>
         <div className="flex items-center gap-2">
           <input
             type="text"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            placeholder="Etiket"
+            placeholder={t.components.apiKeyManager.placeholder}
             className="border-input bg-background h-9 rounded-md border px-3 text-sm"
           />
           <Button size="sm" onClick={handleCreate} disabled={creating}>
             <Plus className="mr-1 h-3 w-3" />
-            {creating ? "..." : "Oluştur"}
+            {creating ? "..." : t.common.create}
           </Button>
         </div>
       </CardHeader>
@@ -82,7 +84,7 @@ export function ApiKeyManager({ initialKeys }: ApiKeyManagerProps) {
         {newKeyValue && (
           <div className="bg-primary/5 border-primary rounded-lg border p-4">
             <p className="mb-2 text-sm font-medium">
-              Yeni API anahtarın oluşturuldu. Bu anahtarı bir daha göremezsin — şimdi kopyala!
+              {t.components.apiKeyManager.newKeyCreated}
             </p>
             <div className="flex items-center gap-2">
               <code className="bg-muted flex-1 rounded px-3 py-2 text-sm">
@@ -102,7 +104,7 @@ export function ApiKeyManager({ initialKeys }: ApiKeyManagerProps) {
         {/* Key listesi */}
         {keys.length === 0 ? (
           <p className="text-muted-foreground py-8 text-center text-sm">
-            Henüz API anahtarın yok. Yukarıdan oluşturabilirsin.
+            {t.components.apiKeyManager.noKeys}
           </p>
         ) : (
           <div className="space-y-2">
@@ -122,7 +124,7 @@ export function ApiKeyManager({ initialKeys }: ApiKeyManagerProps) {
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-muted-foreground text-xs">
-                    {k.usage_count} kullanım
+                    {k.usage_count} {t.common.usage}
                     {k.usage_limit ? ` / ${k.usage_limit}` : ""}
                   </span>
                   <Button

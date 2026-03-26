@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/provider";
 
 interface AccountFormProps {
   user: {
@@ -33,6 +34,7 @@ export function AccountForm({ user }: AccountFormProps) {
   const router = useRouter();
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const { t, locale } = useTranslation();
 
   async function handlePasswordChange(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,13 +45,13 @@ export function AccountForm({ user }: AccountFormProps) {
     const confirm = formData.get("confirm-password") as string;
 
     if (password !== confirm) {
-      toast.error("Şifreler eşleşmiyor.");
+      toast.error(t.components.account.passwordMismatch);
       setLoadingPassword(false);
       return;
     }
 
     if (password.length < 6) {
-      toast.error("Şifre en az 6 karakter olmalı.");
+      toast.error(t.components.account.passwordMinLength);
       setLoadingPassword(false);
       return;
     }
@@ -60,7 +62,7 @@ export function AccountForm({ user }: AccountFormProps) {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Şifre başarıyla güncellendi.");
+      toast.success(t.components.account.passwordUpdated);
       (e.target as HTMLFormElement).reset();
     }
 
@@ -79,43 +81,46 @@ export function AccountForm({ user }: AccountFormProps) {
       {/* Profil bilgileri */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Profil</CardTitle>
-          <CardDescription>Hesap bilgileriniz</CardDescription>
+          <CardTitle className="text-base">{t.components.account.profile}</CardTitle>
+          <CardDescription>{t.components.account.profileDesc}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1">
-              <Label className="text-muted-foreground text-xs">E-posta</Label>
+              <Label className="text-muted-foreground text-xs">{t.components.account.emailLabel}</Label>
               <p className="text-sm font-medium">{user.email}</p>
             </div>
             <div className="space-y-1">
-              <Label className="text-muted-foreground text-xs">Plan</Label>
+              <Label className="text-muted-foreground text-xs">{t.components.account.planLabel}</Label>
               <div>
                 <Badge
                   variant={user.plan === "pro" ? "default" : "secondary"}
                 >
-                  {user.plan === "pro" ? "Pro" : "Free"}
+                  {user.plan === "pro" ? t.common.pro : t.common.free}
                 </Badge>
               </div>
             </div>
             <div className="space-y-1">
-              <Label className="text-muted-foreground text-xs">Kayıt Tarihi</Label>
+              <Label className="text-muted-foreground text-xs">{t.components.account.registrationDate}</Label>
               <p className="text-sm">
-                {new Date(user.createdAt).toLocaleDateString("tr-TR", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {new Date(user.createdAt).toLocaleDateString(
+                  locale === "tr" ? "tr-TR" : "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }
+                )}
               </p>
             </div>
             <div className="space-y-1">
               <Label className="text-muted-foreground text-xs">
-                Giriş Yöntemleri
+                {t.components.account.authMethods}
               </Label>
               <div className="flex gap-1">
                 {user.providers.map((p) => (
                   <Badge key={p} variant="outline" className="text-xs">
-                    {p === "email" ? "E-posta" : p}
+                    {p === "email" ? t.auth.email : p}
                   </Badge>
                 ))}
               </div>
@@ -128,18 +133,18 @@ export function AccountForm({ user }: AccountFormProps) {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">
-            {user.hasPassword ? "Şifre Değiştir" : "Şifre Belirle"}
+            {user.hasPassword ? t.components.account.changePassword : t.components.account.setPassword}
           </CardTitle>
           <CardDescription>
             {user.hasPassword
-              ? "Hesabınızın şifresini güncelleyin"
-              : "E-posta giriş için bir şifre belirleyin"}
+              ? t.components.account.changePasswordDesc
+              : t.components.account.setPasswordDesc}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handlePasswordChange} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="new-password">Yeni Şifre</Label>
+              <Label htmlFor="new-password">{t.components.account.newPassword}</Label>
               <Input
                 id="new-password"
                 name="new-password"
@@ -150,7 +155,7 @@ export function AccountForm({ user }: AccountFormProps) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Şifre Tekrar</Label>
+              <Label htmlFor="confirm-password">{t.components.account.confirmPassword}</Label>
               <Input
                 id="confirm-password"
                 name="confirm-password"
@@ -164,7 +169,7 @@ export function AccountForm({ user }: AccountFormProps) {
               {loadingPassword && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {user.hasPassword ? "Şifreyi Güncelle" : "Şifre Belirle"}
+              {user.hasPassword ? t.components.account.updatePassword : t.components.account.setPasswordBtn}
             </Button>
           </form>
         </CardContent>
@@ -173,14 +178,14 @@ export function AccountForm({ user }: AccountFormProps) {
       {/* Oturum */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Oturum</CardTitle>
+          <CardTitle className="text-base">{t.components.account.session}</CardTitle>
           <CardDescription>
-            Tüm cihazlarda oturumunuzu kapatın
+            {t.components.account.sessionDesc}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button variant="outline" onClick={handleSignOut}>
-            Çıkış Yap
+            {t.common.logout}
           </Button>
         </CardContent>
       </Card>
@@ -189,15 +194,15 @@ export function AccountForm({ user }: AccountFormProps) {
       <Card className="border-destructive/50">
         <CardHeader>
           <CardTitle className="text-destructive text-base">
-            Tehlikeli Alan
+            {t.components.account.dangerZone}
           </CardTitle>
           <CardDescription>
-            Bu işlemler geri alınamaz
+            {t.components.account.dangerZoneDesc}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button variant="destructive" disabled>
-            Hesabı Sil (Yakında)
+            {t.components.account.deleteAccount}
           </Button>
         </CardContent>
       </Card>

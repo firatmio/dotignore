@@ -201,6 +201,9 @@ const en: Translations = {
       docs: "Documentation",
       account: "Account",
       accountSettings: "Account Settings",
+      signOut: "Sign Out",
+      freePlan: "Free Plan",
+      proPlan: "Pro Plan",
     },
     overview: {
       title: "Dashboard",

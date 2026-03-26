@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Copy, Download, Check } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/provider";
 
 interface OutputPanelProps {
   content: string;
@@ -14,6 +15,7 @@ interface OutputPanelProps {
 
 export function OutputPanel({ content, conflicts }: OutputPanelProps) {
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
 
   async function handleCopy() {
     await navigator.clipboard.writeText(content);
@@ -48,12 +50,12 @@ export function OutputPanel({ content, conflicts }: OutputPanelProps) {
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle className="text-sm font-medium">
                 {c.type === "negation-override"
-                  ? "Negation Çakışması"
+                  ? t.components.output.negationConflict
                   : c.type === "duplicate"
-                    ? "Tekrar Eden Kural"
+                    ? t.components.output.duplicateRule
                     : c.type === "redundant"
-                      ? "Gereksiz Kural"
-                      : "Sıralama Çakışması"}
+                      ? t.components.output.redundantRule
+                      : t.components.output.orderConflict}
               </AlertTitle>
               <AlertDescription className="text-xs">{c.message}</AlertDescription>
             </Alert>
@@ -64,15 +66,15 @@ export function OutputPanel({ content, conflicts }: OutputPanelProps) {
       {/* Çıktı */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-base">.gitignore</CardTitle>
+          <CardTitle className="text-base">{t.components.output.gitignore}</CardTitle>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handleCopy}>
               {copied ? <Check className="mr-1 h-3 w-3" /> : <Copy className="mr-1 h-3 w-3" />}
-              {copied ? "Kopyalandı" : "Kopyala"}
+              {copied ? t.common.copied : t.common.copy}
             </Button>
             <Button variant="outline" size="sm" onClick={handleDownload}>
               <Download className="mr-1 h-3 w-3" />
-              İndir
+              {t.common.download}
             </Button>
           </div>
         </CardHeader>

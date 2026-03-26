@@ -5,19 +5,13 @@ import type { Template, TemplateCategory, Conflict } from "@dotignore/shared";
 import { TemplateSelector } from "@/components/template-selector";
 import { OutputPanel } from "@/components/output-panel";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n/provider";
 
 interface GenerateResult {
   content: string;
   conflicts: Conflict[];
   templateCount: number;
 }
-
-const categoryLabels: Record<TemplateCategory, string> = {
-  language: "Programlama Dilleri",
-  framework: "Frameworkler",
-  os: "İşletim Sistemleri",
-  ide: "Editörler / IDE",
-};
 
 const categoryOrder: TemplateCategory[] = ["language", "framework", "os", "ide"];
 
@@ -27,12 +21,20 @@ export function Generator() {
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
+
+  const categoryLabels: Record<TemplateCategory, string> = {
+    language: t.components.generator.languages,
+    framework: t.components.generator.frameworks,
+    os: t.components.generator.os,
+    ide: t.components.generator.editors,
+  };
 
   useEffect(() => {
     fetch("/api/templates")
       .then((r) => r.json())
       .then((data: Template[]) => setTemplates(data))
-      .catch(() => setError("Şablonlar yüklenemedi"));
+      .catch(() => setError(t.components.generator.templateLoadError));
   }, []);
 
   function toggleTemplate(id: string) {
@@ -64,13 +66,13 @@ export function Generator() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "Bir hata oluştu");
+        setError(data.error ?? t.common.error);
         return;
       }
 
       setResult(data as GenerateResult);
     } catch {
-      setError("Bağlantı hatası");
+      setError(t.components.generator.connectionError);
     } finally {
       setLoading(false);
     }
@@ -106,14 +108,14 @@ export function Generator() {
           disabled={selected.size === 0 || loading}
           size="lg"
         >
-          {loading ? "Oluşturuluyor..." : `.gitignore Oluştur (${selected.size} şablon)`}
+          {loading ? t.components.generator.generating : `${t.components.generator.generateButton} (${selected.size} ${t.components.generator.templatesSelected})`}
         </Button>
         {selected.size > 0 && (
           <button
             onClick={() => setSelected(new Set())}
             className="text-muted-foreground hover:text-foreground text-sm"
           >
-            Seçimi Temizle
+            {t.components.generator.clearSelection}
           </button>
         )}
       </div>
