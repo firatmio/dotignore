@@ -162,20 +162,6 @@ curl https://dotignore.vercel.app/api/templates
 
 ---
 
-## Monorepo Structure
-
-```
-dotignore/
-├── apps/
-│   └── web/                  # Next.js web application (App Router)
-├── packages/
-│   ├── cli/                  # @ftarslan/dotignore — CLI tool
-│   ├── shared/               # Shared types, schemas, conflict detector
-│   └── templates/            # .gitignore template definitions
-├── turbo.json
-└── package.json
-```
-
 Built with [Turborepo](https://turbo.build) and [Bun](https://bun.sh).
 
 ### Tech Stack
