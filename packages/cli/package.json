@@ -36,8 +36,6 @@
     "ora": "^9.3.0"
   },
   "devDependencies": {
-    "@dotignore/shared": "workspace:*",
-    "@dotignore/templates": "workspace:*",
     "@types/node": "^20",
     "tsup": "^8.5.1",
     "typescript": "^5"
