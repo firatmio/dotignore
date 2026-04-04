@@ -1,6 +1,6 @@
 {
   "name": "@ftarslan/dotignore",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Smart .gitignore generator — AI-powered suggestions & conflict detection",
   "keywords": [
     "gitignore",
@@ -30,6 +30,7 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
+    "@ftarslan/dotignore": "^0.1.3",
     "chalk": "^5.0.0",
     "commander": "^13.0.0",
     "inquirer": "^12.0.0",
